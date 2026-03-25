@@ -1,125 +1,241 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  Phone,
+  User,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { navLinks } from "@/data/navLinks";
-import { currencies } from "@/data/currencies";
-import { Menu, X, ChevronRight, ChevronDown } from "lucide-react";
 
 const Navbar = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeMobile, setActiveMobile] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // ✅ Desktop dropdown states
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeSubmenu, setActiveSubmenu] = useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-gray-900 text-white shadow-md sticky top-0 z-[100]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Logo" className="h-10 w-auto" />
-            <span className="font-bold text-lg hidden sm:block">Rocky Holiday Trips</span>
-          </div>
+    <nav
+      className={cn(
+        "fixed top-0 w-full z-50 transition-all duration-300",
+        isScrolled
+          ? "bg-white text-black shadow-md py-2"
+          : "bg-transparent text-white py-4"
+      )}
+    >
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link, i) => {
-              
-              // 1. DESTINATIONS: Multi-level Nested Dropdown
-              if (link.subCategories) {
-                return (
-                  <div key={i} className="relative group py-5">
-                    <button className="flex items-center gap-1 hover:text-orange-500 transition-colors">
-                      {link.name} <ChevronDown size={14} />
-                    </button>
-                    <div className="absolute top-full left-0 hidden group-hover:block w-56 bg-white text-gray-800 shadow-2xl rounded-md border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200">
-                      <div className="py-2">
-                        <Link to={link.path} className="block px-4 py-2 font-bold text-orange-600 hover:bg-orange-50 border-b">
-                          All Packages
-                        </Link>
-                        {link.subCategories.map((sub, idx) => (
-                          <div key={idx} className="relative group/sub px-4 py-2 hover:bg-gray-100 flex items-center justify-between cursor-pointer">
-                            <span>{sub.name}</span>
-                            <ChevronRight size={14} className="text-gray-400" />
-                            {/* Nested Domestic/International Locations */}
-                            <div className="absolute top-0 left-full hidden group-hover/sub:block w-56 bg-white shadow-2xl rounded-md border border-gray-100 ml-1">
-                              {sub.locations.map((loc, lIdx) => (
-                                <Link key={lIdx} to={loc.path} className="block px-4 py-2 hover:bg-orange-50 hover:text-orange-600">
-                                  {loc.name}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
+        {/* LOGO */}
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/logo.svg" className="h-8" />
+          <span className="font-bold text-lg">
+            Rocky Holiday <span className="text-orange-600">Trips</span>
+          </span>
+        </Link>
 
-              // 2. BIKE TRIPS: Simple List Dropdown
-              if (link.subItems) {
-                return (
-                  <div key={i} className="relative group py-5">
-                    <button className="flex items-center gap-1 hover:text-orange-500 transition-colors">
-                      {link.name} <ChevronDown size={14} />
-                    </button>
-                    <div className="absolute top-full left-0 hidden group-hover:block w-72 bg-white text-gray-800 shadow-2xl rounded-md border border-gray-100 p-2 mt-1 animate-in fade-in zoom-in-95 duration-200">
-                      {link.subItems.map((item, idx) => (
-                        <Link key={idx} to={item.path} className="block px-4 py-3 text-sm font-medium hover:bg-orange-50 hover:text-orange-600 rounded-md transition-colors">
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                );
-              }
+        {/* DESKTOP MENU */}
+        <div className="hidden lg:flex gap-8 items-center">
+          {navLinks.map((link, i) => {
 
-              // Default Links (Home, Luxury, etc.)
+            // ✅ DESTINATIONS (NESTED DROPDOWN)
+            if (link.type === "nested") {
               return (
-                <Link key={i} to={link.path} className="hover:text-orange-500 transition-colors font-medium">
-                  {link.name}
-                </Link>
-              );
-            })}
-{/* Currency Selector */}
-            <select
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              {currencies.map((c, i) => <option key={i} value={c}>{c}</option>)}
-            </select>
-            <button className="bg-orange-600 px-5 py-2 rounded-full font-bold hover:bg-orange-700 transition-transform active:scale-95">
-              Book Now
-            </button>
-          </div>
+                <div
+                  key={i}
+                  className="relative py-2"
+                  onMouseEnter={() => setActiveDropdown(i)}
+                  onMouseLeave={() => {
+                    setActiveDropdown(null);
+                    setActiveSubmenu(null);
+                  }}
+                >
+                  <button className="flex items-center gap-1 font-semibold">
+                    {link.name} <ChevronDown size={14} />
+                  </button>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
+                  {/* Main Dropdown */}
+                  <div
+                    className={cn(
+                      "absolute top-full left-0 bg-white text-black shadow-xl rounded-lg w-56 transition-all duration-200",
+                      activeDropdown === i
+                        ? "opacity-100 visible"
+                        : "opacity-0 invisible"
+                    )}
+                  >
+                    {link.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="relative"
+                        onMouseEnter={() => setActiveSubmenu(idx)}
+                      >
+                        {/* Parent Item */}
+                        <div className="flex justify-between px-4 py-2 hover:bg-orange-50 cursor-pointer">
+                          {item.name}
+                          <ChevronRight size={14} />
+                        </div>
+
+                        {/* Submenu */}
+                        <div
+                          className={cn(
+                            "absolute top-0 left-full bg-white shadow-xl rounded-xl border w-56 transition-all duration-200",
+                            activeSubmenu === idx
+                              ? "opacity-100 visible"
+                              : "opacity-0 invisible"
+                          )}
+                        >
+                          {item.children.map((child, cIdx) => (
+                            <Link
+                              key={cIdx}
+                              to={child.path}
+                              className="block px-4 py-2 hover:bg-orange-50"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ✅ EXPERIENCES (SIMPLE DROPDOWN)
+            if (link.type === "dropdown") {
+              return (
+                <div
+                  key={i}
+                  className="relative py-2"
+                  onMouseEnter={() => setActiveDropdown(i)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button className="flex items-center gap-1 font-semibold">
+                    {link.name} <ChevronDown size={14} />
+                  </button>
+
+                  <div
+                    className={cn(
+                      "absolute top-full left-0 bg-white text-black shadow-xl rounded-lg w-52 transition-all duration-200",
+                      activeDropdown === i
+                        ? "opacity-100 visible"
+                        : "opacity-0 invisible"
+                    )}
+                  >
+                    {link.items.map((item, idx) => (
+                      <Link
+                        key={idx}
+                        to={item.path}
+                        className="block px-4 py-2 hover:bg-orange-50"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // ✅ NORMAL LINK
+            return (
+              <Link
+                key={i}
+                to={link.path}
+                className={cn(
+                  "font-semibold",
+                  location.pathname === link.path
+                    ? "text-orange-600"
+                    : "hover:text-orange-500"
+                )}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </div>
+
+        {/* RIGHT SIDE */}
+        <div className="hidden lg:flex items-center gap-5">
+          <Search className="cursor-pointer hover:text-orange-500" />
+          <Phone className="cursor-pointer hover:text-orange-500" />
+          <User className="cursor-pointer hover:text-orange-500" />
+
+          <button className="bg-orange-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-orange-700 transition">
+            Book Now
+          </button>
+        </div>
+
+        {/* MOBILE BUTTON */}
+        <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+          {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-gray-800 border-t border-gray-700 max-h-[90vh] overflow-y-auto">
-          <ul className="flex flex-col p-4 space-y-2">
-            {navLinks.map((link, i) => (
-              <li key={i} className="py-2 border-b border-gray-700/50">
-                <Link to={link.path} className="text-lg font-medium" onClick={() => setIsMobileMenuOpen(false)}>
-                  {link.name}
-                </Link>
-                {/* Visual indicator that this has sub-items in mobile */}
-                {(link.subCategories || link.subItems) && (
-                  <span className="ml-2 text-[10px] bg-gray-700 px-2 py-0.5 rounded uppercase opacity-60 italic">
-                    Tap to view on page
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
+      {/* MOBILE MENU */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-black text-white p-6 space-y-4">
+          {navLinks.map((link, i) => (
+            <div key={i}>
+              <div
+                className="flex justify-between items-center"
+                onClick={() =>
+                  setActiveMobile(activeMobile === i ? null : i)
+                }
+              >
+                <Link to={link.path}>{link.name}</Link>
+                {link.items && <ChevronDown />}
+              </div>
+
+              {activeMobile === i && link.items && (
+                <div className="ml-4 mt-2 space-y-2">
+                  {link.type === "nested" &&
+                    link.items.map((item, idx) => (
+                      <div key={idx}>
+                        <p className="text-orange-400">{item.name}</p>
+                        {item.children.map((child, cIdx) => (
+                          <Link
+                            key={cIdx}
+                            to={child.path}
+                            className="block text-gray-300 ml-3"
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+
+                  {link.type === "dropdown" &&
+                    link.items.map((item, idx) => (
+                      <Link
+                        key={idx}
+                        to={item.path}
+                        className="block text-gray-300"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          <button className="w-full bg-orange-600 py-3 rounded-full">
+            Book Now
+          </button>
         </div>
       )}
     </nav>
