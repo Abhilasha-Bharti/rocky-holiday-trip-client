@@ -1,4 +1,4 @@
-import Filter from "@/components/common/Filter";
+import Filter from "@/components/common/filter";
 import PlacesSection from "@/components/common/PlacesSection";
 import Hero from "@/components/sections/Hero";
 import { KashmirPlaces } from "@/data/kashmirPlaces";
