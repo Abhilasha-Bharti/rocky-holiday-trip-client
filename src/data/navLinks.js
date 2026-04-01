@@ -1,28 +1,12 @@
 export const navLinks = [
   { name: "Home", path: "/" },
 
-  {
+   {
     name: "Destinations",
-    type: "nested",
+    type: "dropdown",
     items: [
-      {
-        name: "Kashmir",
-        children: [
-          { name: "Srinagar", path: "/kashmir/srinagar" },
-          { name: "Gulmarg", path: "/kashmir/gulmarg" },
-          { name: "Pahalgam", path: "/kashmir/pahalgam" },
-          { name: "Sonmarg", path: "/kashmir/sonmarg" },
-        ],
-      },
-      {
-        name: "Ladakh",
-        children: [
-          { name: "Leh", path: "/ladakh/leh" },
-          { name: "Nubra Valley", path: "/ladakh/nubra" },
-          { name: "Pangong Lake", path: "/ladakh/pangong" },
-          { name: "Tso Moriri", path: "/ladakh/tso-moriri" },
-        ],
-      },
+      { name: "Kashmir", path: "destinations/kashmir" },
+      { name: "Ladakh", path: "destinations/ladakh" },
     ],
   },
 

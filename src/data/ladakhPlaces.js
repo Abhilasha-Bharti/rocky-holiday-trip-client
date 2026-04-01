@@ -1,0 +1,42 @@
+export const LadakhPlaces = [
+  {
+    id: 1,
+    name: "Leh",
+    type: "top",
+    price: 20000,
+    image: "/images/leh.jpg",
+    desc: "Dal Lake & houseboats experience",
+  },
+  {
+    id: 2,
+    name: "Nubra Valley",
+    type: "adventure",
+    price: 25000,
+    image: "/images/nubra-valley.jpg",
+    desc: "Snow sports & gondola rides",
+  },
+  {
+    id: 3,
+    name: "Pangong",
+    type: "offbeat",
+    price: 15000,
+    image: "/images/pangong.jpg",
+    desc: "Hidden untouched paradise",
+  },
+  {
+    id: 4,
+    name: "Zanskar Valley",
+    type: "trekking",
+    price: 18000,
+    image: "/images/tarsar.jpg",
+    desc: "Famous alpine lake trek",
+  },
+  {
+    id: 5,
+    name: "Pahalgam Camp",
+    type: "camping",
+    price: 12000,
+    image: "/images/pahalgam.jpg",
+    desc: "Riverside camping experience",
+  },
+];

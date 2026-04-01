@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
+import destinationReducer from "@/redux/slices/destinationSlice"
 
 const store = configureStore({
   reducer: {
-    auth: (state = { user: null }, action) => state, // dummy reducer
+    destinations: destinationReducer,
   },
 });
 

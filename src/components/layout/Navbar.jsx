@@ -19,7 +19,7 @@ const Navbar = () => {
 
   // ✅ Desktop dropdown states
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
+ 
 
   const location = useLocation();
 
@@ -53,62 +53,34 @@ const Navbar = () => {
           {navLinks.map((link, i) => {
 
             // ✅ DESTINATIONS (NESTED DROPDOWN)
-            if (link.type === "nested") {
+            if (link.type === "dropdown") {
               return (
                 <div
                   key={i}
                   className="relative py-2"
                   onMouseEnter={() => setActiveDropdown(i)}
-                  onMouseLeave={() => {
-                    setActiveDropdown(null);
-                    setActiveSubmenu(null);
-                  }}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <button className="flex items-center gap-1 font-semibold">
                     {link.name} <ChevronDown size={14} />
                   </button>
 
-                  {/* Main Dropdown */}
                   <div
                     className={cn(
-                      "absolute top-full left-0 bg-white text-black shadow-xl rounded-lg w-56 transition-all duration-200",
+                      "absolute top-full left-0 bg-white text-black shadow-xl rounded-lg w-52 transition-all duration-200",
                       activeDropdown === i
                         ? "opacity-100 visible"
                         : "opacity-0 invisible"
                     )}
                   >
                     {link.items.map((item, idx) => (
-                      <div
+                      <Link
                         key={idx}
-                        className="relative"
-                        onMouseEnter={() => setActiveSubmenu(idx)}
+                        to={item.path}
+                        className="block px-4 py-2 hover:bg-orange-50"
                       >
-                        {/* Parent Item */}
-                        <div className="flex justify-between px-4 py-2 hover:bg-orange-50 cursor-pointer">
-                          {item.name}
-                          <ChevronRight size={14} />
-                        </div>
-
-                        {/* Submenu */}
-                        <div
-                          className={cn(
-                            "absolute top-0 left-full bg-white shadow-xl rounded-xl border w-56 transition-all duration-200",
-                            activeSubmenu === idx
-                              ? "opacity-100 visible"
-                              : "opacity-0 invisible"
-                          )}
-                        >
-                          {item.children.map((child, cIdx) => (
-                            <Link
-                              key={cIdx}
-                              to={child.path}
-                              className="block px-4 py-2 hover:bg-orange-50"
-                            >
-                              {child.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                        {item.name}
+                      </Link>
                     ))}
                   </div>
                 </div>

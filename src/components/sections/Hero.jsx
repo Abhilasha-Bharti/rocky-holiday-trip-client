@@ -4,6 +4,7 @@ const Hero = ({
   title = "Explore Kashmir & Ladakh",
   subtitle = "Discover breathtaking landscapes, offbeat places & unforgettable adventures",
   variant = "home",
+   image = "/images/hero.jpg", // ✅ default fallback
 }) => {
   return (
     <section
@@ -11,9 +12,9 @@ const Hero = ({
         variant === "compact" ? "h-[50vh]" : "h-[90vh]"
       } text-white`}
     >
-      {/* Background Image */}
+      {/* ✅ Dynamic Background Image */}
       <img
-        src="/images/hero.jpg"
+        src={image}
         alt="Hero Background"
         className="absolute inset-0 w-full h-full object-cover"
       />
