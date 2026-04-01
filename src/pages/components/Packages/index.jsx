@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { usePackages } from "@/hooks/usePackages";
-import FilterSidebar from "@/components/common/packages/FilterSidebar";
-import PackagesGrid from "@/components/common/packages/PackagesGrid";
-import TopFilterBar from "@/components/common/packages/TopFilterBar";
+import FilterSidebar from "@/components/common/Packages/FilterSidebar";
+import PackagesGrid from "@/components/common/Packages/PackagesGrid";
+import TopFilterBar from "@/components/common/Packages/TopFilterBar";
 import Hero from "@/components/sections/Hero";
 import { SlidersHorizontal } from "lucide-react";
 

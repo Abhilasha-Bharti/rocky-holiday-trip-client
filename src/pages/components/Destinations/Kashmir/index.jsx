@@ -1,5 +1,5 @@
 import Filter from "@/components/common/filter";
-import PlacesSection from "@/components/common/PlacesSection";
+import PlacesSection from "@/components/common/placesSection";
 import Hero from "@/components/sections/Hero";
 import { KashmirPlaces } from "@/data/kashmirPlaces";
 import { useState } from "react";
